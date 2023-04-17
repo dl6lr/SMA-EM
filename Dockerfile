@@ -7,7 +7,7 @@ RUN apk update && apk upgrade && \
 # Install sma-em daemon
 RUN mkdir -p /opt/smaemd && mkdir -p /etc/smaemd
 WORKDIR /opt/smaemd
-RUN git clone https://github.com/datenschuft/SMA-EM.git .
+RUN git clone https://github.com/dervomsee/SMA-EM .
 RUN pip3 install -r requirements.txt 
 
 ADD run_smaemd.sh /root/

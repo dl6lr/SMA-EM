@@ -49,9 +49,9 @@ parser = ConfigParser()
 #default values
 smaserials = ""
 ipbind = '0.0.0.0'
-MCAST_GRP = '239.12.255.254'
+MCAST_GRP = '239.12.255.255'
 MCAST_PORT = 9522
-parser.read(['/etc/smaemd/config','config'])
+parser.read(['tc/smaemd/config','config'])
 try:
     smaemserials=parser.get('SMA-EM', 'serials')
     ipbind=parser.get('DAEMON', 'ipbind')
@@ -67,13 +67,17 @@ try:
     mreq = struct.pack("4s4s", socket.inet_aton(MCAST_GRP), socket.inet_aton(ipbind))
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 except BaseException:
-    print('could not connect to mulicast group or bind to given interface')
+    print('could not connect to multicast group or bind to given interface')
     sys.exit(1)
 # processing received messages
 while True:
   emparts = {}
-  emparts=decode_speedwire(sock.recv(608))
+  x = sock.recv(608)
+  print(len(x))
+  emparts=decode_speedwire(x)
   if len(emparts) == 0:
+      continue
+  if '3015244372'.__eq__(emparts['serial']):
       continue
   # Output...
   # don't know what P,Q and S means:
@@ -87,7 +91,7 @@ while True:
   print ('S: consume:{}VA {}kVAh supply:{}VA {}VAh'.format(emparts['sconsume'],emparts['sconsumecounter'],emparts['ssupply'],emparts['ssupplycounter']))
   print ('Q: cap {}var {}kvarh ind {}var {}kvarh'.format(emparts['qconsume'],emparts['qconsumecounter'],emparts['qsupply'],emparts['qsupplycounter']))
   print ('cos phi:{}°'.format(emparts['cosphi']))
-  if emparts['speedwire-version']=="2.3.4.R|020304":
+  if 'frequency' in emparts:
     print ('frequency:{}Hz'.format(emparts['frequency']))
   print ('----L1----')
   print ('P: consume:{}W {}kWh supply:{}W {}kWh'.format(emparts['p1consume'],emparts['p1consumecounter'],emparts['p1supply'],emparts['p1supplycounter']))

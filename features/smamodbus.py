@@ -26,7 +26,8 @@
 from pymodbus.payload import BinaryPayloadDecoder
 from pymodbus.constants import Endian
 import datetime
-from pymodbus.client.sync import ModbusTcpClient as ModbusClient
+from pymodbus.client import ModbusTcpClient as ModbusClient
+#from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 import traceback
 
 # defines

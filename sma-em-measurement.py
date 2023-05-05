@@ -51,7 +51,7 @@ smaserials = ""
 ipbind = '0.0.0.0'
 MCAST_GRP = '239.12.255.255'
 MCAST_PORT = 9522
-parser.read(['tc/smaemd/config','config'])
+parser.read(['/etc/smaemd/config','config'])
 try:
     smaemserials=parser.get('SMA-EM', 'serials')
     ipbind=parser.get('DAEMON', 'ipbind')
